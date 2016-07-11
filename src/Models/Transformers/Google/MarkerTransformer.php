@@ -39,7 +39,8 @@ class MarkerTransformer extends TransformerAbstract
         return [
             'title' => (string) $marker->title,
             'slug' => (string) $marker->slug,
-            'latitude' => (double) $marker->latitude,
+            'label' => $marker->label ? (string) $marker->label : (bool) false,
+            'latitude' => (int) $marker->latitude,
             'longitude' => (double) $marker->longitude
         ];
     }

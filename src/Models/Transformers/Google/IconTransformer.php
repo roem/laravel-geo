@@ -14,11 +14,21 @@ class IconTransformer extends TransformerAbstract
      */
     public function transform(Icon $icon)
     {
+        $coords = explode(',', $icon->coords);
+        array_walk($coords, function(&$item) {
+            $item = (int) $item;
+        });
+
         return [
             'latitude' => (double) $icon->latitude,
             'longitude' => (double) $icon->longitude,
-            'coords' => (string) $icon->coords,
-            'image' => (string) $icon->image
+            'shape' => [
+                'coords' => (array) $coords,
+                'type' => 'poly'
+            ],
+            'image' => (string) $icon->image,
+            'width' => (int) $icon->width,
+            'height' => (int) $icon->height
         ];
     }
 }

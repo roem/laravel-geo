@@ -15,9 +15,8 @@ class InfowindowTransformer extends TransformerAbstract
     public function transform(Infowindow $infowindow)
     {
         return [
-            'title' => (string) $infowindow->title,
-            'slug' => (string) $infowindow->slug,
-            'description' => (string) $infowindow->description
+            'content' => (string) "<div id=\"content\"><div id=\"siteNotice\"></div><b>{$infowindow->title}</b><div id=\"bodyContent\">{$infowindow->description}</div></div>",
+            'open' => (bool) $infowindow->open
         ];
     }
 }

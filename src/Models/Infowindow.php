@@ -22,7 +22,8 @@ class Infowindow extends Model
     protected $casts = [
         'title' => 'string',
         'slug' => 'string',
-        'description' => 'string'
+        'description' => 'string',
+        'open' => 'bool'
     ];
 
     /**
@@ -43,7 +44,8 @@ class Infowindow extends Model
     protected $fillable = [
         'title',
         'slug',
-        'description'
+        'description',
+        'open'
     ];
 
 }

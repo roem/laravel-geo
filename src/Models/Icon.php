@@ -23,7 +23,9 @@ class Icon extends Model
         'latitude' => 'double',
         'longitude' => 'double',
         'coords' => 'string',
-        'image' => 'string'
+        'image' => 'string',
+        'width' => 'int',
+        'height' => 'int'
     ];
 
     /**
@@ -45,7 +47,9 @@ class Icon extends Model
         'latitude',
         'longitude',
         'coords',
-        'image'
+        'image',
+        'width',
+        'height'
     ];
 
 }

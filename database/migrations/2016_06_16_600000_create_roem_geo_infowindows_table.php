@@ -18,6 +18,7 @@ class CreateRoemGeoInfowindowsTable extends Migration
             $table->string('title');
             $table->string('slug')->index();
             $table->text('description');
+            $table->boolean('open')->default(false);
             $table->timestamps();
 
             $table->foreign('marker_id')->references('id')->on('roem_geo_markers')->onDelete('cascade');

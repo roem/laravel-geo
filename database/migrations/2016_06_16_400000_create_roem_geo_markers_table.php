@@ -16,6 +16,7 @@ class CreateRoemGeoMarkersTable extends Migration
             $table->increments('id');
             $table->integer('map_id')->unsigned()->index();
             $table->string('title');
+            $table->string('label', 1)->nullable();
             $table->string('slug')->index();
             $table->double('latitude', 11, 8);
             $table->double('longitude', 11, 8);

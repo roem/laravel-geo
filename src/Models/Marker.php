@@ -28,6 +28,7 @@ class Marker extends Model
     protected $casts = [
         'title' => 'string',
         'slug' => 'string',
+        'label' => 'string',
         'latitude' => 'double',
         'longitude' => 'double'
     ];
@@ -51,6 +52,7 @@ class Marker extends Model
     protected $fillable = [
         'title',
         'slug',
+        'label',
         'latitude',
         'longitude'
     ];

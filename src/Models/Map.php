@@ -29,9 +29,9 @@ class Map extends Model
         'type' => 'string',
         'latitude' => 'double',
         'longitude' => 'double',
-        'zoom' => 'integer',
-        'adaptzoom' => 'boolean',
-        'scrollwheel' => 'boolean'
+        'zoom' => 'int',
+        'adaptzoom' => 'bool',
+        'scrollwheel' => 'bool'
     ];
 
     /**

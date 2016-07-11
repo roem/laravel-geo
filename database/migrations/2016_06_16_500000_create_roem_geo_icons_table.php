@@ -19,6 +19,8 @@ class CreateRoemGeoIconsTable extends Migration
             $table->double('longitude', 11, 8);
             $table->string('coords');
             $table->text('image');
+            $table->integer('width');
+            $table->integer('height');
             $table->timestamps();
 
             $table->foreign('marker_id')->references('id')->on('roem_geo_markers')->onDelete('cascade');
