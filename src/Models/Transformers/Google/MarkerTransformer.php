@@ -3,7 +3,9 @@
 namespace Roem\Geo\Models\Transformers\Google;
 
 use League\Fractal\TransformerAbstract;
+use Roem\Geo\Models\Link;
 use Roem\Geo\Models\Marker;
+use stdClass;
 
 class MarkerTransformer extends TransformerAbstract
 {
@@ -40,7 +42,7 @@ class MarkerTransformer extends TransformerAbstract
             'title' => (string) $marker->title,
             'slug' => (string) $marker->slug,
             'label' => $marker->label ? (string) $marker->label : (bool) false,
-            'latitude' => (int) $marker->latitude,
+            'latitude' => (double) $marker->latitude,
             'longitude' => (double) $marker->longitude
         ];
     }

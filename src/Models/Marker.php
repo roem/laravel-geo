@@ -30,7 +30,10 @@ class Marker extends Model
         'slug' => 'string',
         'label' => 'string',
         'latitude' => 'double',
-        'longitude' => 'double'
+        'longitude' => 'double',
+        'zoom' => 'int',
+        'adaptzoom' => 'bool',
+        'scrollwheel' => 'bool'
     ];
 
     /**
@@ -54,7 +57,21 @@ class Marker extends Model
         'slug',
         'label',
         'latitude',
-        'longitude'
+        'longitude',
+        'zoom',
+        'adaptzoom',
+        'scrollwheel'
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'zoom',
+        'adaptzoom',
+        'scrollwheel'
     ];
 
 }
