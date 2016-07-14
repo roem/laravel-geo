@@ -1,101 +1,123 @@
-!function ($) {
-    "use strict";
++function ($) {
+    'use strict';
 
-    var LARAVELGEO_VERSION = '0.0.1';
+    // GLIDE CLASS DEFINITION
+    // ======================
 
-// Global Foundation object
-// This is attached to the window, or used as a module for AMD/Browserify
-    var LaravelGeo = {
-        version: LARAVELGEO_VERSION,
+    var LaravelGeoRegistry = {
+        _adapters: {},
 
-        /**
-         * Stores initialized plugins.
-         */
-        _plugins: {},
-
-        /**
-         * Stores generated unique ids for plugin instances
-         */
-        _uuids: [],
-
-        /**
-         * Defines a Foundation plugin, adding it to the `Foundation` namespace and the list of plugins to initialize when reflowing.
-         * @param {Object} plugin - The constructor of the plugin.
-         */
-        plugin: function(plugin, name) {
-            // Object key to use when adding to global Foundation object
-            // Examples: Foundation.Reveal, Foundation.OffCanvas
-            var className = (name || functionName(plugin));
-            // Object key to use when storing the plugin, also used to create the identifying data attribute for the plugin
-            // Examples: data-reveal, data-off-canvas
-            var attrName  = hyphenate(className);
-
-            // Add to the Foundation object and the plugins list (for reflowing)
-            this._plugins[attrName] = this[className] = plugin;
+        registerAdapter: function (name, adapter) {
+            this._adapters[name] = adapter;
         },
+        unregisterAdapter: function (name) {
+            this._adapters[name] = null;
+        }
+    }
 
-        registerPlugin: function (plugin, name) {
-            var pluginName = name ? hyphenate(name) : functionName(plugin.constructor).toLowerCase();
-            plugin.uuid = this.GetYoDigits(6, pluginName);
+    var LaravelGeo = function (element, options) {
+        this.options = $.extend({}, LaravelGeo.Defaults, options)
 
-            if(!plugin.$element.attr('data-' + pluginName)){ plugin.$element.attr('data-' + pluginName, plugin.uuid); }
-            if(!plugin.$element.data('lgPlugin')){ plugin.$element.data('lgPlugin', plugin); }
-            /**
-             * Fires when the plugin has initialized.
-             * @event Plugin#init
-             */
-            plugin.$element.trigger('init.lg.' + pluginName);
+        this.$element = $(element)
 
-            this._uuids.push(plugin.uuid);
+        this.init()
+    }
 
-            return;
-        },
-        unregisterPlugin: function(plugin){
-            var pluginName = hyphenate(functionName(plugin.$element.data('lgPlugin').constructor));
+    LaravelGeo.Version = '0.0.1'
 
-            this._uuids.splice(this._uuids.indexOf(plugin.uuid), 1);
-            plugin.$element.removeAttr('data-' + pluginName).removeData('lgPlugin')
-            /**
-             * Fires when the plugin has been destroyed.
-             * @event Plugin#destroyed
-             */
-                .trigger('destroyed.lg.' + pluginName);
-            for(var prop in plugin){
-                plugin[prop] = null;//clean up script to prep for garbage collection.
-            }
-            return;
-        },
-        GetYoDigits: function(length, namespace){
-            length = length || 6;
-            return Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1) + (namespace ? '-' + namespace : '');
+    LaravelGeo.Defaults = {
+        adapter: null,
+        wrapperClass: 'laravelGeo',
+        mapApi: '/maps/',
+        map: null,
+        marker: null
+    }
+
+    /**
+     * Initializes the media.
+     * @protected
+     */
+    LaravelGeo.prototype.init = function () {
+        if (typeof this.$element.attr('id') === 'undefined') {
+            this.$element.attr('id', 'laravelGeo__Map--' + this.options.map)
+        }
+
+        var id = this.$element.attr('id')
+        var adapterClass = $.fn.laravelGeo.registry._adapters[this.options.adapter]
+
+        if(this.options.map != null) {
+            $.get(this.options.mapApi + 'map/' + this.options.map, function (data) {
+                return adapterClass(id, data);
+            });
+        } else {
+            $.get(this.options.mapApi + 'marker/' + this.options.marker, function (data) {
+                return adapterClass(id, data);
+            });
         }
     };
 
-    var laravelgeo = function (element, options) {
-        this.options = $.extend({}, LaravelGeo.Defaults, options)
+    LaravelGeo.prototype.reset = function () {
+        this.$stage
+            .removeClass(this.options.progressiveStageCanvasLoadedClass)
+            .removeClass(this.options.progressiveStageMediaLoadedClass)
 
-        console.log('Geo');
+        if (this.$canvas !== false) {
+            this.setDimensions()
+
+            this.$canvas.removeClass(this.options.canvasLoadedClass)
+            this.$canvas[0].getContext("2d").clearRect(0, 0, this.$mediaWidth, this.$mediaHeight);
+        }
+
+        if (this.options.progressive !== false) {
+            this.$thumbnail.removeClass(this.options.thumbnailLoadedClass)
+        }
+
+        this.$media.remove()
+        this.$media = null
+
+        this.setup()
+        this.createMedia()
     }
 
-    window.LaravelGeo = LaravelGeo;
-    $.fn.laravelgeo = laravelgeo;
+    LaravelGeo.prototype.destroy = function () {
+        if (this.options.responsive !== false) {
+            window.clearTimeout(this.resizeTimer)
+            $(window).off('.laravelGeo', null)
+        }
 
-    function functionName(fn) {
-        if (Function.prototype.name === undefined) {
-            var funcNameRegex = /function\s([^(]{1,})\(/;
-            var results = (funcNameRegex).exec((fn).toString());
-            return (results && results.length > 1) ? results[1].trim() : "";
-        }
-        else if (fn.prototype === undefined) {
-            return fn.constructor.name;
-        }
-        else {
-            return fn.prototype.constructor.name;
-        }
+        this.$stage = false
+        this.$thumbnail = false
+        this.$canvas = false
+        this.$media = false
+        this.resizeTimer = null
+    };
+
+    // GLIDE PLUGIN DEFINITION
+    // =======================
+
+    function Plugin(option) {
+        return this.each(function () {
+            var $this = $(this)
+            var data = $this.data('laravelGeo')
+            var options = $.extend({}, LaravelGeo.Defaults, $this.data(), typeof option == 'object' && option)
+
+            if (!data && /destroy|show|hide/.test(option)) return
+            if (!data) $this.data('laravelGeo', (data = new LaravelGeo(this, options)))
+            if (typeof option == 'string') data[option]()
+        })
     }
-    
-    function hyphenate(str) {
-        return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-    }
+
+    $.fn.laravelGeo = Plugin
+    $.fn.laravelGeo.Constructor = LaravelGeo
+    $.fn.laravelGeo.registry = LaravelGeoRegistry
+
+    $(document).ready(function () {
+        $('.' + LaravelGeo.Defaults.wrapperClass + '[data-toggle="autoload"]').each(function () {
+            var $element = $(this)
+            var data = $element.data()
+
+            Plugin.call($element, data)
+        })
+    })
 
 }(jQuery);
