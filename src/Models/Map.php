@@ -26,6 +26,8 @@ class Map extends Model
      * @var array
      */
     protected $casts = [
+        'title' => 'string',
+        'slug' => 'string',
         'type' => 'string',
         'latitude' => 'double',
         'longitude' => 'double',
@@ -51,6 +53,8 @@ class Map extends Model
      * @var array
      */
     protected $fillable = [
+        'title',
+        'slug',
         'type',
         'latitude',
         'longitude',

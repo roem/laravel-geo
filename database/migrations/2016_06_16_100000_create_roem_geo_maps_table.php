@@ -16,6 +16,8 @@ class CreateRoemGeoMapsTable extends Migration
             $table->increments('id');
             $table->string('mapable_type')->index();
             $table->integer('mapable_id')->unsigned()->index();
+            $table->string('title');
+            $table->string('slug')->index();
             $table->string('type')->index();
             $table->double('latitude', 11, 8);
             $table->double('longitude', 11, 8);
