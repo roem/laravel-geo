@@ -24,7 +24,7 @@ class GeoServiceProvider extends ServiceProvider
         ], 'public');
 
         $this->publishes([
-            __DIR__.'/../resources/js/' => resource_path('assets/vendor/roem/laravel-geo')
+            __DIR__.'/../assets/resources/js/' => resource_path('assets/vendor/roem/laravel-geo')
         ], 'resources');
     }
 
