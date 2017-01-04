@@ -19,12 +19,10 @@ class GeoServiceProvider extends ServiceProvider
             __DIR__.'/../database/migrations/' => database_path('migrations')
         ], 'migrations');
 
-        $this->publishes([
-            __DIR__.'/../public/js/' => public_path('vendor/roem')
-        ], 'public');
+        // TODO: precompile js & publish to public
 
         $this->publishes([
-            __DIR__.'/../assets/resources/js/' => resource_path('assets/vendor/roem/laravel-geo')
+            __DIR__.'/../resources/assets/js/' => resource_path('assets/vendor/roem/laravel-geo')
         ], 'resources');
     }
 
