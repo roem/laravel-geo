@@ -34,8 +34,7 @@ class MapStyleTransformer extends TransformerAbstract
     {
         return [
             'title' => (string) $mapStyle->title,
-            'slug' => (string) $mapStyle->slug,
-            'description' => (string) $mapStyle->description
+            'slug' => (string) $mapStyle->slug
         ];
     }
 

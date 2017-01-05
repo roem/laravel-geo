@@ -24,8 +24,8 @@ class MapStyle extends Model
      * @var array
      */
     protected $casts = [
-        'key' => 'string',
-        'value' => 'string'
+        'title' => 'string',
+        'slug' => 'string'
     ];
 
     /**
@@ -45,8 +45,8 @@ class MapStyle extends Model
      * @var array
      */
     protected $fillable = [
-        'key',
-        'value'
+        'title' => 'string',
+        'slug' => 'string'
     ];
 
 }
