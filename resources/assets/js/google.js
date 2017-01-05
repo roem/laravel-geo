@@ -31,7 +31,7 @@
         if (payload.data.map_styles.data.length) {
             this.$mapData.mapTypeControlOptions = {
                 scrollwheel: payload.data.scrollwheel,
-                mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE]
+                mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID]
             }
 
             $.each(payload.data.map_styles.data, function (index, mapStyle) {
