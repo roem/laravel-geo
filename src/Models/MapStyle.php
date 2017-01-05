@@ -45,8 +45,8 @@ class MapStyle extends Model
      * @var array
      */
     protected $fillable = [
-        'title' => 'string',
-        'slug' => 'string'
+        'title',
+        'slug'
     ];
 
 }
