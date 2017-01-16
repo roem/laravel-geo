@@ -152,5 +152,7 @@
         $(window).on('resize', function () {
             this.$mapObject.setCenter(mapCenterObject);
         });
+
+        return this.$mapObject;
     })
 })(jQuery);

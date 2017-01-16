@@ -47,13 +47,15 @@
 
         if(this.options.map != null) {
             $.get(this.options.mapApi + 'map/' + this.options.map, function (data) {
-                return adapterClass(id, data);
+                $.fn.laravelGeo.map = adapterClass(id, data);
             });
         } else {
             $.get(this.options.mapApi + 'marker/' + this.options.marker, function (data) {
-                return adapterClass(id, data);
+                $.fn.laravelGeo.map = adapterClass(id, data);
             });
         }
+
+        return $.fn.laravelGeo.map;
     };
 
     LaravelGeo.prototype.reset = function () {
@@ -110,6 +112,7 @@
     $.fn.laravelGeo = Plugin
     $.fn.laravelGeo.Constructor = LaravelGeo
     $.fn.laravelGeo.registry = LaravelGeoRegistry
+    $.fn.laravelGeo.map = null
 
     $(document).ready(function () {
         $('.' + LaravelGeo.Defaults.wrapperClass + '[data-toggle="autoload"]').each(function () {
