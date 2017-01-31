@@ -1,16 +1,19 @@
 (function () {
     $.fn.laravelGeo.registry.registerAdapter('google', function (id, payload) {
+        this.element = document.getElementById(id)
+        this.$element = $(this.element)
+
         var zoom = payload.data.zoom
         if (payload.data.adaptzoom) {
-            if($(window).height() <= 1024 || $(window).width() <= 768) {
+            if ($(window).height() <= 1024 || $(window).width() <= 768) {
                 zoom = zoom - 1;
             }
 
-            if($(window).height() <= 768 || $(window).width() <= 480) {
+            if ($(window).height() <= 768 || $(window).width() <= 480) {
                 zoom = zoom - 1;
             }
 
-            if($(window).height() <= 480 || $(window).width() <= 360) {
+            if ($(window).height() <= 480 || $(window).width() <= 360) {
                 zoom = zoom - 1;
             }
         }
@@ -41,7 +44,7 @@
             this.$mapData.mapTypeId = this.$mapData.mapTypeControlOptions.mapTypeIds[0]
         }
 
-        this.$mapObject = new google.maps.Map(document.getElementById(id), this.$mapData);
+        this.$mapObject = new google.maps.Map(this.element, this.$mapData);
 
         if (payload.data.map_styles.data.length) {
             $.each(payload.data.map_styles.data, function (index, mapStyle) {
@@ -50,6 +53,8 @@
         }
 
         if (payload.data.markers.data.length) {
+            this.$mapObject.markers = {}
+
             $.each(payload.data.markers.data, function (index, marker) {
                 return addMarker(marker)
             })
@@ -62,7 +67,7 @@
                 map: this.$mapObject
             }
 
-            if(data.label) {
+            if (data.label) {
                 markerData.label = data.label
             }
 
@@ -85,6 +90,8 @@
             if (typeof data.infowindow !== 'undefined') {
                 addInfowindowToMarker(markerObject, data.infowindow.data)
             }
+
+            this.$mapObject.markers[data.slug] = markerObject
 
             return markerObject;
         }
@@ -153,6 +160,6 @@
             this.$mapObject.setCenter(mapCenterObject);
         });
 
-        return this.$mapObject;
+        this.$element.data('LaravelGeoMap', this.$mapObject)
     })
 })(jQuery);
