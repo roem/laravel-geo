@@ -59,10 +59,6 @@
         return this;
     }
 
-    LaravelGeo.prototype.getMap = function () {
-        return this.mapobject;
-    }
-
     LaravelGeo.prototype.reset = function () {
         this.destroy()
         this.init()
@@ -82,7 +78,7 @@
             var data = $this.data('laravelGeo')
             var options = $.extend({}, LaravelGeo.Defaults, $this.data(), typeof option == 'object' && option)
 
-            if (!data && /getMap|reset|destroy/.test(option)) return
+            if (!data && /reset|destroy/.test(option)) return
             if (!data) $this.data('laravelGeo', (data = new LaravelGeo(this, options)))
             if (typeof option == 'string') data[option]()
         })
